@@ -1,0 +1,42 @@
+server:
+  config:
+    logLevel: "info"
+    numHistoryShards: 512
+
+    persistence:
+      default:
+        driver: "sql"
+        sql:
+          pluginName: "postgres"
+          host: cadence-db-dev.cluster-cwierwqzklop.us-east-1.rds.amazonaws.com
+          port: 5432
+          database: cadence
+          user: ${DB_USER}
+          password: ${DB_PASSWORD}
+          maxConns: 20
+          maxIdleConns: 20
+
+      visibility:
+        driver: "sql"
+        sql:
+          pluginName: "postgres"
+          host: cadence-db-dev.cluster-cwierwqzklop.us-east-1.rds.amazonaws.com
+          port: 5432
+          database: cadence
+          user: ${DB_USER}
+          password: ${DB_PASSWORD}
+          maxConns: 10
+          maxIdleConns: 10
+
+web:
+  enabled: true
+
+  env:
+    - name: CADENCE_TCHANNEL_PEERS
+      value: "cadence:7933"
+    - name: CADENCE_FRONTEND_ADDRESS
+      value: "cadence:7933"
+
+  service:
+    type: ClusterIP
+    port: 80
